@@ -31,9 +31,21 @@ export default function LoanCalculator() {
         deductions,
       });
       setResult(resp);
-    } catch (err: any) {
-      setError(err?.response?.data?.message ?? err.message);
-      setResult(null);
+    } catch (err: unknown) {
+       if (err instanceof Error) {
+         // Standard JS error
+         setError(err.message);
+       } else if (
+         typeof err === "object" &&
+         err !== null &&
+         "message" in err &&
+         typeof (err as { message?: string }).message === "string"
+       ) {
+         setError((err as { message: string }).message);
+       } else {
+         setError("An unexpected error occurred");
+       }
+       setResult(null);
     } finally {
       setLoading(false);
     }
