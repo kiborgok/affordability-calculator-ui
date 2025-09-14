@@ -5,17 +5,19 @@ import { AffordabilityRequest, AffordabilityResponse } from "../types/types";
 export async function calculateAffordability(
   data: AffordabilityRequest
 ): Promise<AffordabilityResponse> {
-  const BASE_URL = process.env.API_BASE_URL || "http://localhost:8080/api/v1";
+  const BASE_URL = process.env.API_BASE_URL;
 
   try {
     const res = await fetch(`${BASE_URL}/affordability`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
       cache: "no-store",
     });
 
     if (!res.ok) {
-      // Try to parse error details if backend returns JSON
       let errorDetail: string | undefined;
       try {
         const errData = await res.json();
