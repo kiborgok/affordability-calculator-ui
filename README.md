@@ -38,7 +38,7 @@ This project is built on a **client–server architecture**, ensuring a clear se
 - **Tech stack:** Spring Boot (Java 17).
 - **Role:** Provides the business logic and data validation.
 - **Responsibilities:**
-  - Expose a REST endpoint (`POST /api/affordability`) that accepts JSON input.
+  - Expose a REST endpoint (`POST /api/v1//affordability`) that accepts JSON input.
   - Validate inputs (non-negative numbers, deductions ≤ gross).
   - Apply affordability rules:
     - `netIncome = grossIncome - deductions`
@@ -53,12 +53,3 @@ This project is built on a **client–server architecture**, ensuring a clear se
   2. Frontend sends a POST request to the backend API.
   3. Backend validates, computes, and returns the affordability decision.
   4. Frontend renders results.
-
-### Diagram
-
-```mermaid
-flowchart TD
-  A[User] --> B[Frontend (Next.js 15)]
-  B -->|POST /api/affordability (JSON)| C[Backend (Spring Boot)]
-  C -->|Response: JSON result| B
-  B --> A
