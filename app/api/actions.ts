@@ -5,7 +5,7 @@ import { AffordabilityRequest, AffordabilityResponse } from "../types/types";
 export async function calculateAffordability(
   data: AffordabilityRequest
 ): Promise<AffordabilityResponse> {
-  const BASE_URL = process.env.API_BASE_URL;
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   try {
     const res = await fetch(`${BASE_URL}/affordability`, {
