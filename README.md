@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Affordability Calculator
 
-## Getting Started
+## Overview
+Single-page app (Next.js + Tailwind css) communicating with a Spring Boot backend that computes an affordability decision.
 
-First, run the development server:
+## Requirements
+- Node 18+
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Live URLs
+- Frontend: https://affordability-calculator-ui.vercel.app/
+- Backend API: https://affordability-calculator-123136158650.us-central1.run.app/api/v1/affordability
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Local (without Docker)
+### Frontend
+- cd affordability-calculator-ui
+- npm install
+- npm run dev
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Logic
+net_income = grossIncome - deductions
+max_loan = 0.5 * net_income
+eligible = max_loan >= 20000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Client–Server Architecture
 
-## Learn More
+This project is built on a **client–server architecture**, ensuring a clear separation of concerns and maintainability.
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend (Client)
+- **Tech stack:** Next.js 15, TypeScript
+- **Role:** Provides the user interface for the Affordability Calculator.
+- **Responsibilities:**
+  - Render a clean, responsive form for entering gross income and deductions.
+  - Call the backend via server actions or REST API requests.
+  - Display results: net income, maximum loan amount, eligibility status, and explanation.
+  - Handle and display errors gracefully.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Backend (Server)
+- **Tech stack:** Spring Boot (Java 17).
+- **Role:** Provides the business logic and data validation.
+- **Responsibilities:**
+  - Expose a REST endpoint (`POST /api/affordability`) that accepts JSON input.
+  - Validate inputs (non-negative numbers, deductions ≤ gross).
+  - Apply affordability rules:
+    - `netIncome = grossIncome - deductions`
+    - `maxLoan = 50% of netIncome`
+    - `eligible = maxLoan >= 20,000`
+  - Return structured JSON response with all calculated fields and explanation.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Communication
+- **Protocol:** JSON over HTTP.
+- **Flow:**
+  1. User submits data from the frontend form.
+  2. Frontend sends a POST request to the backend API.
+  3. Backend validates, computes, and returns the affordability decision.
+  4. Frontend renders results.
 
-## Deploy on Vercel
+### Diagram
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```mermaid
+flowchart TD
+  A[User] --> B[Frontend (Next.js 15)]
+  B -->|POST /api/affordability (JSON)| C[Backend (Spring Boot)]
+  C -->|Response: JSON result| B
+  B --> A
